@@ -1,0 +1,29 @@
+{
+  "name": "hauntedhouse",
+  "version": "1.0.0",
+  "description": "Haunted House project",
+  "scripts": {
+    "compile": "tsc && cp -r ./src/main/resources/* ./target && cp -r ./node_modules ./target",
+    "test": "mocha --reporter spec --compilers ts:ts-node/register 'src/**/*.spec.ts'",
+    "deploy": "http-server ./target -o http://localhost:8080/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "author": "Nick Iannone <nickiannone@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.15.1",
+    "systemjs": "^0.21.5"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "http-server": "^0.11.1",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  }
+}

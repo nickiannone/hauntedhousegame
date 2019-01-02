@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="node_modules/phaser/dist/phaser.js"></script>
+    <script src="node_modules/systemjs/dist/system.js"></script>
+</head>
+<body>
+<script>
+    System.config({
+        packages: {
+            '.': {
+                defaultExtension: 'js',
+                packages: {
+                    'ui': { defaultExtension: 'js' },
+                    'config': { defaultExtension: 'js' },
+                    'game': { defaultExtension: 'js' },
+                    'gfx': { defaultExtension: 'js' },
+                    'sound': { defaultExtension: 'js' },
+                    'util': { defaultExtension: 'js' }
+                }
+            }
+        }
+    });
+
+    System.import("./bootstrapper").then(function (indexModule) {
+        var bootstrapper = new indexModule.Bootstrapper();
+        bootstrapper.boot();
+    }, function (error) {
+        console.log(error, "Error");
+    });
+</script>
+</body>
+</html>
