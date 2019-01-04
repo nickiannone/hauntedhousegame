@@ -1,3 +1,6 @@
-# Game Design Document
+# Haunted House Game
+## Game Design Document
 
-This 
+## Overview
+
+This document describes the overall design of the game

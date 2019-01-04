@@ -886,6 +886,10 @@ declare type SmoothedKeyControlConfig = {
      */
     up?: Phaser.Input.Keyboard.Key;
     /**
+     * The Key to be pressed that will move the Camera down.
+     */
+    down?: Phaser.Input.Keyboard.Key;
+    /**
      * The Key to be pressed that will zoom the Camera in.
      */
     zoomIn?: Phaser.Input.Keyboard.Key;

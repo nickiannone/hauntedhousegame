@@ -1,3 +1,4 @@
+import { GridCamera } from "../game/prototypes/grid/GridCamera";
 
 export class MainMenu extends Phaser.Scene {
     constructor() {
@@ -8,16 +9,15 @@ export class MainMenu extends Phaser.Scene {
         // Load config file
         this.load.json('config', 'config.json');
 
+        this.scene.add('GridCamera', GridCamera, false);
+
         console.log('Config loaded!');
     }
 
     create() {
-        // Set up title
+        // TODO Build out menu components!
 
-        // Set up start/continue game button
-        // TODO How do we configure save files?
-
-        // Set up settings button
-
+        // Just jump straight into the game
+        this.scene.start('GridCamera');
     }
 }

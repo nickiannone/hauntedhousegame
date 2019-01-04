@@ -2,6 +2,7 @@ import { MainMenu } from './ui/MainMenu';
 import { SettingsMenu } from './ui/SettingsMenu';
 import { GameScene } from './ui/GameScene';
 import { PauseMenu } from './ui/PauseMenu';
+import { GridCamera } from './game/prototypes/grid/GridCamera';
 
 export class Bootstrapper {
     boot() {
@@ -13,7 +14,7 @@ export class Bootstrapper {
             loader: {
                 baseURL: 'assets'
             },
-            scene: [ MainMenu, SettingsMenu, GameScene, PauseMenu ]
+            scene: [ GridCamera ]
         };
         console.log('Booting...');
         var game = new Phaser.Game(config);
