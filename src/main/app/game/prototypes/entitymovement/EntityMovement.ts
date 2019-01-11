@@ -8,6 +8,11 @@ export class EntityMovement extends Phaser.Scene {
     redguy: Phaser.Physics.Arcade.Image;
     redguy2: Phaser.Physics.Arcade.Image;
 
+    redguy2Up: Phaser.Input.Keyboard.Key;
+    redguy2Down: Phaser.Input.Keyboard.Key;
+    redguy2Left: Phaser.Input.Keyboard.Key;
+    redguy2Right: Phaser.Input.Keyboard.Key;
+
     constructor() {
         super('Entity Movement prototype');
     }
@@ -53,7 +58,11 @@ export class EntityMovement extends Phaser.Scene {
         this.redguy2 = this.physics.add.image(500, 500, 'redguy');
         this.redguy2.setCollideWorldBounds(true);
 
-        // 
+        // Register some key listeners
+        this.redguy2Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.I);
+        this.redguy2Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        this.redguy2Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+        this.redguy2Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
     }
 
     update(time: number, delta: number) {
@@ -82,6 +91,16 @@ export class EntityMovement extends Phaser.Scene {
         }
 
         // Move the second redguy (not tied to the camera)
-        // if (this.input.keyboard.keys[])
+        if (this.redguy2Up.isDown) {
+            this.redguy2.setVelocityY(-300);
+        } else if (this.redguy2Down.isDown) {
+            this.redguy2.setVelocityY(300);
+        }
+
+        if (this.redguy2Left.isDown) {
+            this.redguy2.setVelocityX(-300);
+        } else if (this.redguy2Right.isDown) {
+            this.redguy2.setVelocityX(300);
+        }
     }
 }

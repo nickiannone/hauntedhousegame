@@ -2,7 +2,7 @@ import { MainMenu } from './ui/MainMenu';
 import { SettingsMenu } from './ui/SettingsMenu';
 import { GameScene } from './ui/GameScene';
 import { PauseMenu } from './ui/PauseMenu';
-import { GridCamera } from './game/prototypes/grid/GridCamera';
+import { EntityMovement } from './game/prototypes/entitymovement/EntityMovement';
 
 export class Bootstrapper {
     boot() {
@@ -17,7 +17,7 @@ export class Bootstrapper {
             physics: {
                 default: 'arcade'
             },
-            scene: [ GridCamera ]
+            scene: [ EntityMovement ]
         };
         console.log('Booting...');
         var game = new Phaser.Game(config);
