@@ -5,7 +5,7 @@
   "scripts": {
     "compile": "tsc && cp -r ./src/main/resources/* ./target && cp -r ./node_modules ./target",
     "test": "mocha --reporter spec --compilers ts:ts-node/register 'src/**/*.spec.ts'",
-    "deploy": "http-server ./target -o http://localhost:8080/index.html"
+    "deploy": "http-server ./target -p 6969 -o http://localhost:6969/index.html"
   },
   "repository": {
     "type": "git",

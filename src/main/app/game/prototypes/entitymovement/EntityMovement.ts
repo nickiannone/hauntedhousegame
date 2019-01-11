@@ -3,8 +3,10 @@ export class EntityMovement extends Phaser.Scene {
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     camera: Phaser.Cameras.Scene2D.BaseCamera;
-    xText: Phaser.GameObjects.Text;
-    yText: Phaser.GameObjects.Text;
+    text: Phaser.GameObjects.Text;
+
+    redguy: Phaser.Physics.Arcade.Image;
+    redguy2: Phaser.Physics.Arcade.Image;
 
     constructor() {
         super('Entity Movement prototype');
@@ -35,20 +37,51 @@ export class EntityMovement extends Phaser.Scene {
         grid.setAltFillStyle(0x000000, 1.0);
 
         // Add text boxes to render position
-        this.xText = this.add.text(0, 0, "X: ").setScrollFactor(0);
-        this.yText = this.add.text(0, 24, "Y: ").setScrollFactor(0);
+        this.text = this.add.text(0, 0, ["X: ", "Y: "]).setScrollFactor(0);
+
+        // Configure physics
+        this.physics.world.setBounds(0, 0, 1000, 1000);
+
+        // Add a character as a static image
+        this.redguy = this.physics.add.image(400, 300, 'redguy');
+        this.redguy.setCollideWorldBounds(true);
+
+        // Follow the character
+        this.cameras.main.startFollow(this.redguy, true);
+
+        // Add another character as a static imagea
+        this.redguy2 = this.physics.add.image(500, 500, 'redguy');
+        this.redguy2.setCollideWorldBounds(true);
+
+        // 
     }
 
     update(time: number, delta: number) {
-        this.controls.update(delta);
+        // Not using the smoothed camera control right now
+        // this.controls.update(delta);
         
-        this.xText.setPosition(this.camera.x, this.camera.y);
-        this.yText.setPosition(this.camera.x, this.camera.y + 24);
+        this.text.setText([
+            "X: " + this.controls.camera.midPoint.x, 
+            "Y: " + this.controls.camera.midPoint.y
+        ]);
 
-        this.xText.setText("X: " + this.camera.x);
-        this.yText.setText("Y: " + this.camera.y);
+        this.redguy.setVelocity(0);
+        this.redguy2.setVelocity(0);
 
-        this.xText.updateText();
-        this.yText.updateText();
+        // Move the first redguy (tied to the camera)
+        if (this.controls.up.isDown) {
+            this.redguy.setVelocityY(-300);
+        } else if (this.controls.down.isDown) {
+            this.redguy.setVelocityY(300);
+        }
+
+        if (this.controls.left.isDown) {
+            this.redguy.setVelocityX(-300);
+        } else if (this.controls.right.isDown) {
+            this.redguy.setVelocityX(300);
+        }
+
+        // Move the second redguy (not tied to the camera)
+        // if (this.input.keyboard.keys[])
     }
 }

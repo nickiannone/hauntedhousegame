@@ -14,6 +14,9 @@ export class Bootstrapper {
             loader: {
                 baseURL: 'assets'
             },
+            physics: {
+                default: 'arcade'
+            },
             scene: [ GridCamera ]
         };
         console.log('Booting...');

@@ -3,8 +3,7 @@ export class GridCamera extends Phaser.Scene {
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     camera: Phaser.Cameras.Scene2D.BaseCamera;
-    xText: Phaser.GameObjects.Text;
-    yText: Phaser.GameObjects.Text;
+    text: Phaser.GameObjects.Text;
 
     constructor() {
         super('Grid Camera prototype');
@@ -35,23 +34,13 @@ export class GridCamera extends Phaser.Scene {
         grid.setAltFillStyle(0x000000, 1.0);
 
         // Add text boxes to render position
-        this.xText = this.add.text(0, 0, "X: ").setScrollFactor(0);
-        this.yText = this.add.text(0, 24, "Y: ").setScrollFactor(0);
+        this.text = this.add.text(0, 0, ["X: ", "Y: "]).setScrollFactor(0);
     }
 
     update(time: number, delta: number) {
         this.controls.update(delta);
 
-        this.xText.x = this.camera.x;
-        this.xText.y = this.camera.y;
-
-        this.yText.x = this.camera.x;
-        this.yText.y = this.camera.y + 24;
-
-        this.xText.setText("X: " + this.camera.x);
-        this.yText.setText("Y: " + this.camera.y);
-
-        this.xText.updateText();
-        this.yText.updateText();
+        // ScrollX/Y or midPoint.X/Y?
+        this.text.setText(["X: " + this.controls.camera.midPoint.x, "Y: " + this.controls.camera.midPoint.y]);
     }
 }
