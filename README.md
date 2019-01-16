@@ -44,7 +44,7 @@ Code components will be loaded from subdirectories of the src/main/app folder, o
 
 To build the game, run
 
-> npm run compile
+> npm run build
 
 To deploy the game, run
 
@@ -52,7 +52,9 @@ To deploy the game, run
 
 The game should launch in a browser window.
 
-*NOTE* If you have made recent changes, you'll have to do a hard-reload in order to reload the modified JS files!
+To continue building the game as you update files, open a second bash shell and run
+
+> npm run build-watch
 
 ### Compilation Output
 
