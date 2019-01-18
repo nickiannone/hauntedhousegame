@@ -1,6 +1,7 @@
-import { Level, Wall, Direction } from "../../level/Level";
+import { Level, Wall, Direction, Cell } from "../../level/Level";
 import { WallCollision } from "../walls/WallCollision";
 import { Point2D } from "../../../utils/Point2D";
+import { WallRenderable } from "../../level/Renderables";
 
 export class WallCreation extends Phaser.Scene {
 
@@ -149,10 +150,61 @@ export class WallCreation extends Phaser.Scene {
         this.input.setPollAlways();
         
         // Render the level assets
+        for (let cell of this.level.cells) {
+            // Draw each wall first
+            for (let wall of cell.walls) {
+                let wallRenderable: WallRenderable = WallCreation.calculateWallRenderable(this.level, cell, wall);
+                this.add.image(wallRenderable.x, wallRenderable.y, wallRenderable.texture);
+            }
+        }
     }
 
     update(time: number, delta: number) {
         // Snap the cursor to the grid
 
+    }
+
+    private static calculateWallRenderable(level: Level, cell: Cell, wall: Wall): WallRenderable {
+        let x: number = level.borderX;
+        let y: number = level.borderY;
+        let texture: string = wall.asset + '_' + wall.direction + (wall.door) ? '_door' : '';
+
+        // Thickness of a wall is 20px, width and height of a cell is 128px
+        switch (wall.direction) {
+            case 'up':
+                x += (cell.x * 128) + (128 / 2);
+                y += (cell.y * 128) + (20 / 2);
+                if (cell.walls.filter((wall) => wall.direction === 'left').length) {
+                    texture += '_leftcorner';
+                }
+                if (cell.walls.filter((wall) => wall.direction === 'right').length) {
+                    texture += '_rightcorner';
+                }
+                break;
+            case 'down':
+                x += (cell.x * 128) + (128 / 2);
+                y += (cell.y * 128) + 128 - (20 / 2);
+                // TODO
+                break;
+            case 'left':
+                x += (cell.x * 128) + (20 / 2);
+                y += (cell.y * 128) + (128 / 2);
+                // TODO
+                break;
+            case 'right':
+                x += (cell.x * 128) + 128 - (20 / 2);
+                y += (cell.y * 128) + (128 / 2);
+                // TODO
+                break;
+            default:
+                // TODO Make an assert-unreachable!
+                break;
+        }
+
+        return {
+            x: x,
+            y: y,
+            texture: texture
+        };
     }
 }
