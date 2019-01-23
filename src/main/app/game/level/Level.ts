@@ -35,6 +35,8 @@ export interface Cell {
     y: number;
     asset: string;
     walls: Wall[];
+    // Render
+    floorImage?: Phaser.GameObjects.Image;
 }
 
 export interface Wall {
@@ -44,12 +46,16 @@ export interface Wall {
     asset: string;
     backside?: Wall;
     isOuter?: boolean;
+    // Render
+    image?: Phaser.GameObjects.Image;
 }
 
 export interface WallAttachment {
     asset: string;
     position: number;
     height: number;
+    // Render
+    image?: Phaser.GameObjects.Image;
 }
 
 export interface Door {
@@ -57,6 +63,8 @@ export interface Door {
     // Not serialized:
     fixed?: boolean;
     backsideDoor?: Door;
+    // Render
+    image?: Phaser.GameObjects.Image;
 }
 
 // Derived objects

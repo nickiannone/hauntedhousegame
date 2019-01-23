@@ -1,7 +1,6 @@
 import { Level, Wall, Direction, Cell } from "../../level/Level";
-import { WallCollision } from "../walls/WallCollision";
 import { Point2D } from "../../../utils/Point2D";
-import { WallRenderable } from "../../level/Renderables";
+import { WallRenderable, FloorRenderable } from "../../level/Renderables";
 
 export class WallCreation extends Phaser.Scene {
 
@@ -42,6 +41,9 @@ export class WallCreation extends Phaser.Scene {
 
     preload() {
         this.load.image('blueboy', 'sprites/blueboy/blueboy.png');
+
+        // Load floor reference image
+        this.load.image('floor', 'sprites/floors/floor.png');
 
         // Load wall reference images
         this.load.image('wall_ref/wall', 'sprites/walls/wall_ref/wall.png');
@@ -160,11 +162,21 @@ export class WallCreation extends Phaser.Scene {
         
         // Render the level assets
         for (let cell of this.level.cells) {
+            // Draw each floor
+            let floorRenderable: FloorRenderable = WallCreation.calculateFloorRenderable(this.level, cell);
+            let floorImage = this.add.image(floorRenderable.x, floorRenderable.y, floorRenderable.texture);
+            cell.floorImage = floorImage;
+
             // Draw each wall first
             for (let wall of cell.walls) {
                 let wallRenderable: WallRenderable = WallCreation.calculateWallRenderable(this.level, cell, wall);
                 let wallImage = this.add.image(wallRenderable.x, wallRenderable.y, wallRenderable.texture);
                 wallImage.setRotation(wallRenderable.rotation);
+                wall.image = wallImage;
+
+                // TODO Render attachments
+
+                // TODO Render doors
             }
         }
 
@@ -181,6 +193,18 @@ export class WallCreation extends Phaser.Scene {
         let worldY = this.input.y + this.controls.camera.scrollY;
         this.blueboy.setPosition(worldX - (worldX % 128) + 64, 
             worldY - (worldY % 128) + 64);
+    }
+
+    private static calculateFloorRenderable(level: Level, cell: Cell): FloorRenderable {
+        let x: number = level.borderX + (cell.x * 128) + (128 / 2);
+        let y: number = level.borderY + (cell.y * 128) + (128 / 2);
+        let texture: string = cell.asset;
+
+        return {
+            x: x,
+            y: y,
+            texture: texture,
+        };
     }
 
     private static calculateWallRenderable(level: Level, cell: Cell, wall: Wall): WallRenderable {
