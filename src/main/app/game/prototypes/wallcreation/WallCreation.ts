@@ -35,10 +35,23 @@ export class WallCreation extends Phaser.Scene {
         return false;
     }
 
+    static rotate(d: Direction, clockwise: boolean, steps: number): Direction {
+        let directions: Direction[] = [ 'up', 'right', 'down', 'left' ];
+        return directions[directions.indexOf(d) + (clockwise ? steps : -steps) % 4];
+    }
+
     preload() {
-        this.load.image('vwall', 'sprites/wall/v_wall.png');
-        this.load.image('hwall', 'sprites/wall/h_wall.png');
         this.load.image('blueboy', 'sprites/blueboy/blueboy.png');
+
+        // Load wall reference images
+        this.load.image('wall_ref/wall', 'sprites/walls/wall_ref/wall.png');
+        this.load.image('wall_ref/wall_door', 'sprites/walls/wall_ref/wall_door.png');
+        this.load.image('wall_ref/wall_door_lc', 'sprites/walls/wall_ref/wall_door_lc.png');
+        this.load.image('wall_ref/wall_door_lc_rc', 'sprites/walls/wall_ref/wall_door_lc_rc.png');
+        this.load.image('wall_ref/wall_door_rc', 'sprites/walls/wall_ref/wall_door_rc.png');
+        this.load.image('wall_ref/wall_lc', 'sprites/walls/wall_ref/wall_lc.png');
+        this.load.image('wall_ref/wall_lc_rc', 'sprites/walls/wall_ref/wall_lc_rc.png');
+        this.load.image('wall_ref/wall_rc', 'sprites/walls/wall_ref/wall_rc.png');
 
         // TODO Automate level loading & move to level loader class!
         this.level = {
@@ -70,7 +83,7 @@ export class WallCreation extends Phaser.Scene {
                             asset: 'door_exterior',
                             fixed: true
                         } : undefined,
-                        asset: 'wall_default',
+                        asset: 'wall_ref',
                         
                     });
                 }
@@ -83,7 +96,7 @@ export class WallCreation extends Phaser.Scene {
                             asset: 'door_exterior',
                             fixed: true
                         } : undefined,
-                        asset: 'wall_default',
+                        asset: 'wall_ref',
                     });
                 }
 
@@ -95,7 +108,7 @@ export class WallCreation extends Phaser.Scene {
                             asset: 'door_exterior',
                             fixed: true
                         } : undefined,
-                        asset: 'wall_default'
+                        asset: 'wall_ref'
                     });
                 }
                 
@@ -107,14 +120,14 @@ export class WallCreation extends Phaser.Scene {
                             asset: 'door_exterior',
                             fixed: true
                         } : undefined,
-                        asset: 'wall_default'
+                        asset: 'wall_ref'
                     });
                 }
 
                 this.level.cells.push({
                     x: i,
                     y: j,
-                    asset: 'floor_default',
+                    asset: 'floor',
                     walls: walls
                 });
             }
@@ -144,30 +157,37 @@ export class WallCreation extends Phaser.Scene {
         this.camera = this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
 
         this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
-
-        // Create the cursor
-        this.blueboy = this.add.image(0, 0, 'blueboy');
-        this.input.setPollAlways();
         
         // Render the level assets
         for (let cell of this.level.cells) {
             // Draw each wall first
             for (let wall of cell.walls) {
                 let wallRenderable: WallRenderable = WallCreation.calculateWallRenderable(this.level, cell, wall);
-                this.add.image(wallRenderable.x, wallRenderable.y, wallRenderable.texture);
+                let wallImage = this.add.image(wallRenderable.x, wallRenderable.y, wallRenderable.texture);
+                wallImage.setRotation(wallRenderable.rotation);
             }
         }
+
+        // Create the cursor
+        this.blueboy = this.add.image(0, 0, 'blueboy');
+        this.input.setPollAlways();
     }
 
     update(time: number, delta: number) {
-        // Snap the cursor to the grid
+        this.controls.update(delta);
 
+        // Snap the cursor to the grid
+        let worldX = this.input.x + this.controls.camera.scrollX;
+        let worldY = this.input.y + this.controls.camera.scrollY;
+        this.blueboy.setPosition(worldX - (worldX % 128) + 64, 
+            worldY - (worldY % 128) + 64);
     }
 
     private static calculateWallRenderable(level: Level, cell: Cell, wall: Wall): WallRenderable {
         let x: number = level.borderX;
         let y: number = level.borderY;
-        let texture: string = wall.asset + '_' + wall.direction + (wall.door) ? '_door' : '';
+        let texture: string = wall.asset + '/wall' + ((wall.door) ? '_door' : '');
+        let rotation: number;
 
         // Thickness of a wall is 20px, width and height of a cell is 128px
         switch (wall.direction) {
@@ -175,26 +195,45 @@ export class WallCreation extends Phaser.Scene {
                 x += (cell.x * 128) + (128 / 2);
                 y += (cell.y * 128) + (20 / 2);
                 if (cell.walls.filter((wall) => wall.direction === 'left').length) {
-                    texture += '_leftcorner';
+                    texture += '_lc';
                 }
                 if (cell.walls.filter((wall) => wall.direction === 'right').length) {
-                    texture += '_rightcorner';
+                    texture += '_rc';
                 }
+                rotation = 0;
                 break;
             case 'down':
                 x += (cell.x * 128) + (128 / 2);
                 y += (cell.y * 128) + 128 - (20 / 2);
-                // TODO
+                if (cell.walls.filter((wall) => wall.direction === 'right').length) {
+                    texture += '_lc';
+                }
+                if (cell.walls.filter((wall) => wall.direction === 'left').length) {
+                    texture += '_rc';
+                }
+                rotation = Math.PI;
                 break;
             case 'left':
                 x += (cell.x * 128) + (20 / 2);
                 y += (cell.y * 128) + (128 / 2);
-                // TODO
+                if (cell.walls.filter((wall) => wall.direction === 'down').length) {
+                    texture += '_lc';
+                }
+                if (cell.walls.filter((wall) => wall.direction === 'up').length) {
+                    texture += '_rc';
+                }
+                rotation = Math.PI * 1.5;
                 break;
             case 'right':
                 x += (cell.x * 128) + 128 - (20 / 2);
                 y += (cell.y * 128) + (128 / 2);
-                // TODO
+                if (cell.walls.filter((wall) => wall.direction === 'up').length) {
+                    texture += '_lc';
+                }
+                if (cell.walls.filter((wall) => wall.direction === 'down').length) {
+                    texture += '_rc';
+                }
+                rotation = Math.PI * 0.5;
                 break;
             default:
                 // TODO Make an assert-unreachable!
@@ -204,7 +243,8 @@ export class WallCreation extends Phaser.Scene {
         return {
             x: x,
             y: y,
-            texture: texture
+            texture: texture,
+            rotation: rotation
         };
     }
 }

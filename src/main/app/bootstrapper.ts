@@ -2,7 +2,7 @@ import { MainMenu } from './ui/MainMenu';
 import { SettingsMenu } from './ui/SettingsMenu';
 import { GameScene } from './ui/GameScene';
 import { PauseMenu } from './ui/PauseMenu';
-import { WallCollision } from './game/prototypes/walls/WallCollision';
+import { WallCreation } from './game/prototypes/wallcreation/WallCreation';
 
 export class Bootstrapper {
     boot() {
@@ -17,7 +17,7 @@ export class Bootstrapper {
             physics: {
                 default: 'arcade'
             },
-            scene: [ WallCollision ]
+            scene: [ WallCreation ]
         };
         console.log('Booting...');
         var game = new Phaser.Game(config);
