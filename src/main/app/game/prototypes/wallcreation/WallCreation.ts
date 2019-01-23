@@ -183,6 +183,10 @@ export class WallCreation extends Phaser.Scene {
         // Create the cursor
         this.blueboy = this.add.image(0, 0, 'blueboy');
         this.input.setPollAlways();
+
+        // TODO Bind the mouse inputs to handle click and drag
+
+        // TODO Bind the keyboard inputs to handle switching between adding walls, removing walls, and adding/removing doors
     }
 
     update(time: number, delta: number) {
@@ -195,6 +199,7 @@ export class WallCreation extends Phaser.Scene {
             worldY - (worldY % 128) + 64);
     }
 
+    // TODO Move this into a Floor class!
     private static calculateFloorRenderable(level: Level, cell: Cell): FloorRenderable {
         let x: number = level.borderX + (cell.x * 128) + (128 / 2);
         let y: number = level.borderY + (cell.y * 128) + (128 / 2);
@@ -207,6 +212,7 @@ export class WallCreation extends Phaser.Scene {
         };
     }
 
+    // TODO Move this into a Wall class!
     private static calculateWallRenderable(level: Level, cell: Cell, wall: Wall): WallRenderable {
         let x: number = level.borderX;
         let y: number = level.borderY;
