@@ -1,6 +1,7 @@
 import { Level, Wall, Direction, Cell } from "../../level/Level";
 import { Point2D } from "../../../utils/Point2D";
 import { WallRenderable, FloorRenderable } from "../../level/Renderables";
+import { LevelLoader } from "../../level/LevelLoader";
 
 export class WallCreation extends Phaser.Scene {
 
@@ -54,6 +55,8 @@ export class WallCreation extends Phaser.Scene {
         this.load.image('wall_ref/wall_lc', 'sprites/walls/wall_ref/wall_lc.png');
         this.load.image('wall_ref/wall_lc_rc', 'sprites/walls/wall_ref/wall_lc_rc.png');
         this.load.image('wall_ref/wall_rc', 'sprites/walls/wall_ref/wall_rc.png');
+
+        this.level = LevelLoader.loadLevel(this, 'levels/test_level.json');
 
         // TODO Automate level loading & move to level loader class!
         this.level = {

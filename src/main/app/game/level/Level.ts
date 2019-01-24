@@ -8,6 +8,7 @@ export interface Level {
     entrances: LevelEntrance[];
     exits: LevelExit[];
     cells: Cell[];
+    assets: Asset[];
 }
 
 export type Direction = "up" | "down" | "left" | "right";
@@ -75,4 +76,8 @@ export interface Room {
 
 export interface Path {
     cells: Cell[];
+}
+
+export interface Asset {
+    
 }
