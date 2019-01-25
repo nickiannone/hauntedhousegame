@@ -76,6 +76,7 @@ export class WallCreation extends Phaser.Scene {
         };
 
         // Initialize cells with border walls
+        // TODO Move this to the level loader as a backup!
         for (let i = 0; i < this.level.width; i++) {
             for (let j = 0; j < this.level.height; j++) {
                 let walls: Wall[] = [];
