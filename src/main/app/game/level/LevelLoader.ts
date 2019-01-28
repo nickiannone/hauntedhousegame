@@ -1,6 +1,9 @@
 import { Level } from "./Level";
+import { LevelSerializer } from "./serialize/LevelSerializer";
 
 export class LevelLoader {
+
+    private static levelSerializer: LevelSerializer = new LevelSerializer();
     
     public static preloadLevel(scene: Phaser.Scene, levelName: string): string {
         const packFilePath = 'levels/' + levelName + '/pack.json';
@@ -22,13 +25,14 @@ export class LevelLoader {
      */
     public static loadLevel(scene: Phaser.Scene, levelCacheKey: string): Level {
         // TODO Add data validation!
-        const json: Level = scene.cache.json.get(levelCacheKey);
+        const level: Level = scene.cache.json.get(levelCacheKey);
+
+        LevelLoader.levelSerializer.linkChildren(level);
 
         // TODO Populate with in-game stuff!
+        // LevelLoader.levelSerializer.deserialize(level);
 
-        return json;
+        return level;
     }
-
-
 
 }
