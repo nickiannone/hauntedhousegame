@@ -1,4 +1,4 @@
-import { Level, Wall, Direction, Cell } from "../../level/Level";
+import { Level } from "../../level/Level";
 import { Point2D } from "../../../utils/Point2D";
 import { LevelLoader } from "../../level/LevelLoader";
 import { LevelRenderer } from "../../level/render/LevelRenderer";
@@ -20,11 +20,6 @@ export class WallCreation extends Phaser.Scene {
 
     constructor() {
         super('Wall Creation prototype');
-    }
-
-    static rotate(d: Direction, clockwise: boolean, steps: number): Direction {
-        let directions: Direction[] = [ 'up', 'right', 'down', 'left' ];
-        return directions[directions.indexOf(d) + (clockwise ? steps : -steps) % 4];
     }
 
     preload() {
@@ -98,6 +93,7 @@ export class WallCreation extends Phaser.Scene {
         this.input.setPollAlways();
 
         // TODO Bind the mouse inputs to handle click and drag
+
 
         // TODO Bind the keyboard inputs to handle switching between adding walls, removing walls, and adding/removing doors
     }

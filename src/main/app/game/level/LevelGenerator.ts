@@ -1,5 +1,6 @@
-import { Level, Wall, Direction, LevelEntrance, LevelExit, EntranceType, ExitType } from "./Level";
+import { Level, Wall, LevelEntrance, LevelExit, EntranceType, ExitType } from "./Level";
 import { LevelSerializer } from "./serialize/LevelSerializer";
+import { Direction } from "../../utils/Direction";
 
 export interface LevelGenerationInfo {
     borderX: number;

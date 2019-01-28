@@ -5,6 +5,7 @@ import { WallRenderer } from "./render/WallRenderer";
 import { WallAttachmentRenderer } from "./render/WallAttachmentRenderer";
 import { DoorRenderer } from "./render/DoorRenderer";
 import { Serializable } from "./serialize/Serializables";
+import { Direction } from "../../utils/Direction";
 
 export interface Level extends Renderable<LevelRenderer>, Serializable<void> {
     width: number;
@@ -15,8 +16,6 @@ export interface Level extends Renderable<LevelRenderer>, Serializable<void> {
     exits: LevelExit[];
     cells: Cell[];
 }
-
-export type Direction = "up" | "down" | "left" | "right";
 
 export type EntranceType = 'customer' | 'staff' | 'other';
 
