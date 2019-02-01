@@ -33,12 +33,8 @@ export abstract class EditorBrush {
     protected onMouseDown(pos: Point2D): void {}
     protected onMouseUp(pos: Point2D): void {}
     protected onMouseMove(pos: Point2D): void {}
-    protected onClick(pos: Point2D): void {}
-    protected onDoubleClick(pos: Point2D): void {}
-    protected onDrag(startPos: Point2D, currPos: Point2D): void {}
-    protected onKeyDown(key: Phaser.Input.Keyboard.Key): void {}
-    protected onKeyUp(key: Phaser.Input.Keyboard.Key): void {}
-    protected onKeyPress(key: Phaser.Input.Keyboard.Key): void {}
+    protected onKeyDown(event: KeyboardEvent): void {}
+    protected onKeyUp(event: KeyboardEvent): void {}
     protected onUpdate(time: number, delta: number): void {}
 
     /**

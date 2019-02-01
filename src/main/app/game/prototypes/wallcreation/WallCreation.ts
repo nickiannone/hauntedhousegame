@@ -1,8 +1,6 @@
 import { Level } from "../../level/Level";
 import { Point2D } from "../../../utils/Point2D";
-import { LevelLoader } from "../../level/LevelLoader";
 import { LevelRenderer } from "../../level/render/LevelRenderer";
-import { LevelSerializer } from "../../level/serialize/LevelSerializer";
 import { LevelGenerator } from "../../level/LevelGenerator";
 
 export class WallCreation extends Phaser.Scene {
@@ -17,6 +15,8 @@ export class WallCreation extends Phaser.Scene {
     blueboy: Phaser.GameObjects.Image;
     origin?: Point2D;
     wallCursor?: Point2D;
+
+    prevMousePos: Point2D;
 
     constructor() {
         super('Wall Creation prototype');
@@ -93,9 +93,17 @@ export class WallCreation extends Phaser.Scene {
         this.input.setPollAlways();
 
         // TODO Bind the mouse inputs to handle click and drag
+        this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
+            console.log('Key down');
+            console.log(event);
+        });
 
+        this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
+            console.log('Key up');
+            console.log(event);
+        });
 
-        // TODO Bind the keyboard inputs to handle switching between adding walls, removing walls, and adding/removing doors
+        this.prevMousePos = { x: this.input.mousePointer.x, y: this.input.mousePointer.y };
     }
 
     update(time: number, delta: number) {
@@ -106,5 +114,27 @@ export class WallCreation extends Phaser.Scene {
         let worldY = this.input.y + this.controls.camera.scrollY;
         this.blueboy.setPosition(worldX - (worldX % 128) + 64, 
             worldY - (worldY % 128) + 64);
+
+        const currMousePos = {
+            x: this.input.mousePointer.x,
+            y: this.input.mousePointer.y
+        };
+
+        if (this.input.mousePointer.justMoved) {
+            console.log('Mouse move');
+            console.log({ prev: this.prevMousePos, curr: currMousePos });
+        }
+
+        if (this.input.mousePointer.justUp) {
+            console.log('Mouse up');
+            console.log(currMousePos);
+        }
+
+        if (this.input.mousePointer.justDown) {
+            console.log('Mouse down');
+            console.log(currMousePos);
+        }
+
+        this.prevMousePos = currMousePos;
     }
 }
