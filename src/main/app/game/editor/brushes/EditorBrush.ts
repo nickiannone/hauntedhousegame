@@ -1,6 +1,7 @@
 import { EditorControl } from "../EditorControl";
 import { Point2D } from "../../../utils/Point2D";
 import { Direction } from "../../../utils/Direction";
+import { ViewportEdgeData } from "../ViewportEdgeData";
 
 export abstract class EditorBrush {
 
@@ -8,7 +9,7 @@ export abstract class EditorBrush {
     private _state: string = '';
 
     // The scene of the game world.
-    protected scene: Phaser.Scene;
+    protected levelScene: Phaser.Scene;
 
     // The editor control scene.
     protected editorControl: EditorControl
@@ -30,32 +31,29 @@ export abstract class EditorBrush {
     // Input Events
     //==============
 
-    protected onMouseDown(pos: Point2D): void {}
-    protected onMouseUp(pos: Point2D): void {}
-    protected onMouseMove(pos: Point2D): void {}
-    protected onKeyDown(event: KeyboardEvent): void {}
-    protected onKeyUp(event: KeyboardEvent): void {}
-    protected onUpdate(time: number, delta: number): void {}
+    public abstract onMouseDown(pos: Point2D): void;
+    public abstract onMouseUp(pos: Point2D): void;
+    public abstract onMouseMove(prevPos: Point2D, pos: Point2D): void;
+    public abstract onKeyDown(event: KeyboardEvent): void;
+    public abstract onKeyUp(event: KeyboardEvent): void;
+    public abstract onUpdate(time: number, delta: number): void;
 
     /**
-     * Reads the amount of pixels away from the edge of the viewport you are,
-     * when the mouse moves within the editor threshold.
-     * 
-     * @param direction The edge you're near.
-     * @param distancePx The distance from the edge. Positive = inside edge, negative = outside.
+     * Notifies the brush when the viewport is dragged by cursor proximity to an edge.
+     * Does not get called when the editor control has isViewportDragEnabled set to false.
      */
-    protected onViewportEdge(direction: Direction, distancePx: number) {}
+    public abstract onViewportDrag(edgeData: ViewportEdgeData[], deltaDrag: Point2D): void;
 
     // Brush State Events
     //====================
 
-    protected onStateTransition(state: string, oldState: string): void {}
+    public abstract onStateTransition(state: string, oldState: string): void;
 
     // Menu Events
     //=============
-    protected onMenuFocus(): void {}
-    protected onMenuBlur(): void {}
-    protected onMenuChange(event: string, key: string, value: any): void {}
+    public abstract onMenuFocus(): void;
+    public abstract onMenuBlur(): void;
+    public abstract onMenuChange(event: string, key: string, value: any): void;
 
     // END OF ABSTRACT METHODS
 
@@ -71,16 +69,18 @@ export abstract class EditorBrush {
     }
 
     // Activates the brush.
-    public activate(scene: Phaser.Scene) {
-        // TODO Bind keyboard, mouse, and update events
-
+    public activate(levelScene: Phaser.Scene) {
+        this.levelScene = levelScene;
         this.onActivate();
     }
 
     // Deactivates the brush.
     public deactivate() {
-        // TODO Unbind keyboard, mouse, and update events
-
         this.onDeactivate();
+    }
+
+    // Dispatches input events
+    public preload() {
+        this.onPreload();
     }
 }

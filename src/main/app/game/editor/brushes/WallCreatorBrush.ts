@@ -1,8 +1,31 @@
 import { EditorBrush } from "./EditorBrush";
 import { EditorControl } from "../EditorControl";
 import { Point2D } from "../../../utils/Point2D";
+import { ViewportEdgeData } from "../ViewportEdgeData";
 
 export class WallCreatorBrush extends EditorBrush {
+
+    private cursorImage: Phaser.GameObjects.Image;
+
+    public onKeyDown(event: KeyboardEvent): void {}
+    public onKeyUp(event: KeyboardEvent): void {}
+    public onUpdate(time: number, delta: number): void {}
+
+    public onViewportDrag(viewportEdgeData: ViewportEdgeData[]): void {}
+
+    public onMenuFocus(): void {
+        if (this.state !== 'dragging') {
+            this.state = 'menu';
+        }
+    }
+    public onMenuBlur(): void {
+        if (this.state !== 'dragging') {
+            this.state = 'idle';
+        }
+    }
+    public onMenuChange(event: string, key: string, value: any): void {
+        // TODO Implement menu option handling!
+    }
 
     /**
      * State machine:
@@ -36,14 +59,22 @@ export class WallCreatorBrush extends EditorBrush {
     }
 
     protected onActivate(): void {
+        // Add cursor image to editor control
+        this.cursorImage = this.editorControl.add.image(0, 0, 'blueboy');
+
+        // TODO Initialize menu options!
+        //this.editorControl.brushOptionsPanel.clear();
+        //this.editorControl.brushOptionsPanel.push({ ... });
+
+        // Set the state.
         this.state = 'idle';
     }
     
     protected onDeactivate(): void {
-
+        this.cursorImage.destroy();
     }
 
-    protected onStateTransition(state: string, oldState: string): void {
+    public onStateTransition(state: string, oldState: string): void {
         // Just handle reset on idle.
         if (state === 'idle') {
             this.originPoint = null;
@@ -55,15 +86,17 @@ export class WallCreatorBrush extends EditorBrush {
         }
     }
 
-    protected onMouseDown(pos: Point2D): void {
-        if (this.state !== 'dragging') {
+    public onMouseDown(pos: Point2D): void {
+        if (this.state === 'idle') {
             this.state = 'dragging';
             this.originPoint = this.roundToNearestCellCorner(pos);
             this.currentPoint = this.originPoint;
+        } else if (this.state === 'menu') {
+            // TODO Let the editor UI handle the event!
         }
     }
 
-    protected onDrag(pos: Point2D): void {
+    public onMouseMove(prevPos: Point2D, pos: Point2D): void {
         if (this.state === 'dragging') {
             this.currentPoint = this.roundToNearestCellCorner(pos);
             if (!this.tempLine) {
@@ -75,8 +108,15 @@ export class WallCreatorBrush extends EditorBrush {
         }
     }
 
-    protected onMouseUp(pos: Point2D): void {
+    public onMouseUp(pos: Point2D): void {
+        if (this.state === 'dragging') {
+            // TODO Calculate the new end position and create the line!
 
+
+            this.state = 'idle';
+        } else if (this.state === 'menu') {
+            // TODO Let the editor UI handle the event!
+        }
     }
 
     private roundToNearestCellCorner(pos: Point2D): Point2D {
